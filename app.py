@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =========================================================
-# ALGORITMA CUBIC SPLINE MANUAL (NATURAL SPLINE)
+# ALGORITMA KUBIK SPLINE MANUAL 
 # =========================================================
 def cubic_spline_manual(x, y, x_pred):
     n = len(x) - 1
@@ -85,13 +85,13 @@ h1 {
 .subtitle {
     text-align: center;
     color: #d63384;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .section-title {
     color: #ff5fa2;
     font-weight: 700;
-    font-size: 21px;
+    font-size: 25px;
     margin-bottom: 12px;
 }
 
@@ -116,7 +116,7 @@ st.markdown("""
 <div class="card">
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p class="subtitle">
-        Haii! Selamat datang di website interpolasi 💗<br>
+        Haii! Selamat datang di website interpolasi Kubik Spline💗<br>
         Masukkan nama variabel dan data X & Y kamu yaa ✨
     </p>
 </div>
@@ -168,7 +168,7 @@ if hitung:
             background:#ffffff;
             padding:14px;
             border-radius:12px;
-            font-size:20px;
+            font-size:25px;
             color:#c2185b;
             font-weight:600;
             text-align:center;
@@ -190,7 +190,7 @@ if hitung:
     yy = spline_curve(x, y, xx)
 
     fig, ax = plt.subplots(figsize=(7,4))
-    ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Cubic Spline")
+    ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Kubik Spline")
     ax.scatter(x, y, color="#c2185b", label="Data Asli")
     ax.scatter(x_pred, y_pred, color="#007bff", s=80,
                label=f"Prediksi ({x_pred})")
