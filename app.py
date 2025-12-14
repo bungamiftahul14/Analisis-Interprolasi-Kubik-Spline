@@ -75,7 +75,7 @@ def cubic_spline_manual(x, y, x_pred):
 # KONFIGURASI HALAMAN STREAMLIT
 # =========================================================
 st.set_page_config(
-    page_title="Interpolasi Cubic Spline Manual",
+    page_title="Interpolasi Kubik Spline",
     page_icon="🌸",
     layout="centered"
 )
