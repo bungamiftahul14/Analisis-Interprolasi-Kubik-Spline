@@ -157,7 +157,7 @@ if hitung:
 
     y_pred = cubic_spline_manual(x, y, x_pred)
 
-     st.markdown(f"""
+    st.markdown(f"""
     <div class="card" style="text-align:center;">
         <div class="section-title">💖 Hasil Prediksi</div>
         <div style="
