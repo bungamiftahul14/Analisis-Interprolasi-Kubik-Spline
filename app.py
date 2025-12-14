@@ -112,23 +112,35 @@ Langkah 8  : Evaluasi spline pada titik x tertentu
 # =========================================================
 # TAB 2 — INPUT DATA (SEDERHANA)
 # =========================================================
+# =========================================================
+# TAB 2 — INPUT DATA (SEDERHANA)
+# =========================================================
 with tab2:
-st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
 
-# Variabel X
-x_name = st.text_input("Nama Variabel X", placeholder="contoh: Hari")
-x_str = st.text_input("Data X (pisahkan dengan koma)", placeholder="contoh: 1, 2, 5, 7, 10")
+    # Variabel X
+    x_name = st.text_input("Nama Variabel X", placeholder="contoh: Hari")
+    x_str = st.text_input(
+        "Data X (pisahkan dengan koma)",
+        placeholder="contoh: 1, 2, 5, 7, 10"
+    )
 
-# Variabel Y
-y_name = st.text_input("Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
-y_str = st.text_input("Data Y (pisahkan dengan koma)", placeholder="contoh: 3, 6, 8, 11, 15")
+    # Variabel Y
+    y_name = st.text_input(
+        "Nama Variabel Y",
+        placeholder="contoh: Tinggi Jagung (cm)"
+    )
+    y_str = st.text_input(
+        "Data Y (pisahkan dengan koma)",
+        placeholder="contoh: 3, 6, 8, 11, 15"
+    )
 
-# Prediksi
-x_pred = st.number_input("Nilai X yang ingin diprediksi")
+    # Prediksi
+    x_pred = st.number_input("Nilai X yang ingin diprediksi")
 
-hitung = st.button("Hitung Interpolasi")
+    hitung = st.button("Hitung Interpolasi")
 
-st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # TAB 3 — HASIL
