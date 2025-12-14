@@ -91,7 +91,7 @@ h1 {
 .section-title {
     color: #ff5fa2;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 12px;
 }
 
@@ -127,7 +127,7 @@ st.markdown("""
 # =========================================================
 st.markdown("""
 <div class="card">
-    <div class="section-title">💗 Masukkan data X dan Y dengan jumlah yang sama untuk memprediksi nilai yang diinginkan</div>
+    <div class="section-title">Masukkan data X dan Y dengan jumlah yang sama untuk memprediksi nilai yang diinginkan ▼ </div>
 """, unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
