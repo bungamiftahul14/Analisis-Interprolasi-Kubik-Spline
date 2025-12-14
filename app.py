@@ -117,7 +117,7 @@ st.markdown("""
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p class="subtitle">
         Haii! Selamat datang💗<br>
-        Website ini digunakan untuk menghitung interpolasi kubik spline dari data X dan Y ✨
+        Website ini digunakan untuk menghitung interpolasi kubik spline dari data X dan Y
     </p>
 </div>
 """, unsafe_allow_html=True)
