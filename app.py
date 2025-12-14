@@ -9,40 +9,7 @@ Original file is located at
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-
-# =========================================================
-# FUNGSI NATURAL CUBIC SPLINE
-# =========================================================
-def cubic_spline_manual(x, y, x_pred):
-    n = len(x) - 1
-    h = np.diff(x)
-
-    A = np.zeros((n+1, n+1))
-    B = np.zeros(n+1)
-
-    A[0,0] = 1
-    A[n,n] = 1
-
-    for i in range(1, n):
-        A[i,i-1] = h[i-1]
-        A[i,i]   = 2*(h[i-1]+h[i])
-        A[i,i+1] = h[i]
-        B[i] = 3*((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
-
-    c = np.linalg.solve(A, B)
-
-    a = y[:-1]
-    b = np.zeros(n)
-    d = np.zeros(n)
-
-    for i in range(n):
-        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
-        d[i] = (c[i+1]-c[i])/(3*h[i])
-
-    for i in range(n):
-        if x[i] <= x_pred <= x[i+1]:
-            dx = x_pred - x[i]
-            return a[i] + b[i]*dx + c[i]*dx**2 + d[i]*dx**3
+from scipy.interpolate import CubicSpline
 
 # =========================================================
 # KONFIGURASI HALAMAN
@@ -54,7 +21,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS FINAL (NO SPACER, NO EMPTY CARD)
+# CSS FINAL (SIMETRIS & PADAT)
 # =========================================================
 st.markdown("""
 <style>
@@ -63,42 +30,47 @@ body {
 }
 
 .block-container {
-    padding: 32px;
+    padding: 30px;
 }
 
 .card {
     background: linear-gradient(135deg, #ffffff, #fff0f7);
-    padding: 24px;
+    padding: 20px;
     border-radius: 18px;
-    box-shadow: 0 8px 18px rgba(255,105,180,0.15);
+    box-shadow: 0 6px 16px rgba(255,105,180,0.15);
     margin-bottom: 22px;
 }
 
+/* JUDUL */
 h1 {
     text-align: center;
     color: #ff5fa2;
-    margin-bottom: 6px;
+    margin-bottom: 2px;
 }
 
+/* SUB JUDUL */
 .subtitle {
     text-align: center;
-    color: #c94f7c;
+    color: #d63384;
+    font-size: 18px;
     margin-top: 0;
-    font-size: 16px;
 }
 
+/* JUDUL SECTION */
 .section-title {
     color: #ff5fa2;
     font-weight: 700;
-    font-size: 20px;
-    margin-bottom: 14px;
+    font-size: 21px;
+    margin-bottom: 12px;
 }
 
+/* LABEL INPUT */
 label {
     color: #c2185b !important;
     font-weight: 600;
 }
 
+/* BUTTON */
 .stButton button {
     background: linear-gradient(135deg, #ff8ec7, #ff5fa2);
     color: white;
@@ -109,7 +81,7 @@ label {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# HEADER (1 CARD – TIDAK ADA SPACER)
+# HEADER
 # =========================================================
 st.markdown("""
 <div class="card">
@@ -122,7 +94,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================================================
-# INPUT DATA (LANGSUNG, TANPA JARAK KOSONG)
+# INPUT DATA
 # =========================================================
 st.markdown("""
 <div class="card">
@@ -136,13 +108,12 @@ with col1:
     x_str  = st.text_input("Data X (pisahkan dengan koma)", placeholder="1, 2, 5, 7, 10")
 
 with col2:
-    y_name = st.text_input("Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
+    y_name = st.text_input("Nama Variabel Y", placeholder="contoh: Tinggi Tanaman (cm)")
     y_str  = st.text_input("Data Y (pisahkan dengan koma)", placeholder="3, 6, 8, 11, 15")
 
-x_pred = st.number_input("Nilai X yang ingin diprediksi", placeholder="Masukkan angka", value=None)
+x_pred = st.number_input("Nilai X yang ingin diprediksi", value=None, placeholder="Masukkan angka")
 
 hitung = st.button("💖 Hitung Interpolasi")
-
 st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
@@ -155,31 +126,54 @@ if hitung:
     idx = np.argsort(x)
     x, y = x[idx], y[idx]
 
-    y_pred = cubic_spline_manual(x, y, x_pred)
+    spline = CubicSpline(x, y)
+    y_pred = spline(x_pred)
 
+    #  HASIL PREDIKSI
     st.markdown("""
     <div class="card">
         <div class="section-title">💖 Hasil Prediksi</div>
     """, unsafe_allow_html=True)
 
     st.markdown(
-        f"<p style='font-size:18px; color:#c2185b;'>"
-        f"{y_name} = <b>{y_pred:.4f}</b></p>",
+        f"""
+        <div style="
+            background:#ffffff;
+            padding:14px;
+            border-radius:12px;
+            font-size:20px;
+            color:#c2185b;
+            font-weight:600;
+            text-align:center;
+        ">
+        {y_name} = {y_pred:.4f}
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<h4 style='color:#ff5fa2; text-align:center;'>📊 Visualisasi Hasil Prediksi</h4>",
+        unsafe_allow_html=True
+    )
+
+    #  GRAFIK 
     xx = np.linspace(x.min(), x.max(), 300)
-    yy = [cubic_spline_manual(x, y, xi) for xi in xx]
+    yy = spline(xx)
 
     fig, ax = plt.subplots(figsize=(7,4))
-    ax.plot(xx, yy, label="Kubik Spline")
-    ax.scatter(x, y)
-    ax.scatter(x_pred, y_pred)
-    ax.grid(alpha=0.3)
+    ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Kubik Spline")
+    ax.scatter(x, y, color="#c2185b", label="Data Asli")
+    ax.scatter(x_pred, y_pred, color="#007bff", s=80,
+               label=f"Prediksi ({x_pred})")
+
+    ax.set_xlabel(x_name, fontsize=11, color="#c2185b")
+    ax.set_ylabel(y_name, fontsize=11, color="#c2185b")
+    ax.grid(True, alpha=0.3)
     ax.legend()
 
     st.pyplot(fig)
-    st.markdown("</div>", unsafe_allow_html=True)
 
     # PENUTUP
     st.markdown("""
