@@ -90,8 +90,8 @@ h1 {
 
 .section-title {
     color: #ff5fa2;
-    font-weight: 700;
-    font-size: 25px;
+    font-weight: 600;
+    font-size: 18px;
     margin-bottom: 12px;
 }
 
@@ -116,8 +116,8 @@ st.markdown("""
 <div class="card">
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p class="subtitle">
-        Haii! Selamat datang di website interpolasi Kubik Spline💗<br>
-        Semoga kami bisa membantu kamu ya ✨
+        Haii! Selamat datang di website Interpolasi Kubik Spline💗<br>
+        ini digunakan untuk menghitung interpolasi kubik spline dari data X dan Y ✨
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -127,7 +127,7 @@ st.markdown("""
 # =========================================================
 st.markdown("""
 <div class="card">
-    <div class="section-title">💗 Masukkan Data Anda</div>
+    <div class="section-title">💗 Masukkan data X dan Y dengan jumlah yang sama untuk memprediksi nilai yang diinginkan</div>
 """, unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
