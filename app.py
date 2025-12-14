@@ -25,9 +25,9 @@ def cubic_spline_manual(x, y, x_pred):
 
     for i in range(1, n):
         A[i, i-1] = h[i-1]
-        A[i, i] = 2*(h[i-1] + h[i])
+        A[i, i] = 2 * (h[i-1] + h[i])
         A[i, i+1] = h[i]
-        B[i] = 3*((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
+        B[i] = 3 * ((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
 
     c = np.linalg.solve(A, B)
 
@@ -36,14 +36,16 @@ def cubic_spline_manual(x, y, x_pred):
     d = np.zeros(n)
 
     for i in range(n):
-        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
-        d[i] = (c[i+1]-c[i])/(3*h[i])
+        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i] + c[i+1]) / 3
+        d[i] = (c[i+1]-c[i]) / (3*h[i])
 
     for i in range(n):
         if x[i] <= x_pred <= x[i+1]:
             dx = x_pred - x[i]
             return a[i] + b[i]*dx + c[i]*dx**2 + d[i]*dx**3
+
     return None
+
 
 # =========================================================
 # KONFIGURASI HALAMAN
@@ -55,34 +57,44 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS SOFT PINK – WEBSITE STYLE
+# CSS FINAL (BERSIH & RAPI)
 # =========================================================
 st.markdown("""
 <style>
 body {
     background-color: #fff7fb;
 }
+
 .block-container {
     padding: 35px;
 }
 
 .card {
-    background: linear-gradient(135deg, #fff, #fff0f7);
+    background: linear-gradient(135deg, #ffffff, #fff0f7);
     padding: 25px;
     border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.15);
+    box-shadow: 0 8px 20px rgba(255,105,180,0.15);
     margin-bottom: 25px;
 }
 
 h1 {
     color: #ff5fa2;
     text-align: center;
+    margin-bottom: 6px;
 }
 
 .subtitle {
     text-align: center;
     color: #c94f7c;
     font-size: 16px;
+    margin-top: 0px;
+}
+
+.section-title {
+    color: #ff5fa2;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
 }
 
 label {
@@ -96,6 +108,7 @@ label {
     border-radius: 10px;
     font-weight: bold;
 }
+
 .stButton button:hover {
     background: linear-gradient(135deg, #ff5fa2, #ff8ec7);
 }
@@ -109,8 +122,8 @@ st.markdown("""
 <div class="card">
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p class="subtitle">
-            Haii! Selamat datang di website interpolasi 💗<br>
-            Masukkan nama variabel dan data X & Y kamu yaa ✨
+        Haii! Selamat datang di website interpolasi 💗<br>
+        Masukkan nama variabel dan data X & Y kamu yaa ✨
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -119,7 +132,7 @@ st.markdown("""
 # INPUT DATA
 # =========================================================
 st.markdown("<div class='card'>", unsafe_allow_html=True)
-st.subheader("💗 Masukkan Data")
+st.markdown("<div class='section-title'>💗 Masukkan Data</div>", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 
@@ -131,23 +144,28 @@ with col2:
     y_name = st.text_input("🧷 Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
     y_str  = st.text_input("✨ Data Y (pisahkan dengan koma)", placeholder="contoh: 3, 6, 8, 11, 15")
 
-x_pred = st.number_input("🔍 Nilai X yang ingin diprediksi", value=None, placeholder="Masukkan angka")
+x_pred = st.number_input(
+    "🔍 Nilai X yang ingin diprediksi",
+    placeholder="Masukkan angka",
+    value=None
+)
+
 hitung = st.button("💖 Hitung Interpolasi")
 st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
-# HASIL
+# HASIL & VISUALISASI
 # =========================================================
 if hitung:
     try:
         x = np.array([float(i) for i in x_str.split(",")])
         y = np.array([float(i) for i in y_str.split(",")])
     except:
-        st.error("Data harus berupa angka dan dipisahkan koma")
+        st.error("Data harus berupa angka dan dipisahkan dengan koma")
         st.stop()
 
     if len(x) < 3 or len(x) != len(y):
-        st.error("Minimal 3 titik dan jumlah X = Y")
+        st.error("Minimal 3 titik dan jumlah data X dan Y harus sama")
         st.stop()
 
     idx = np.argsort(x)
@@ -159,18 +177,19 @@ if hitung:
 
     y_pred = cubic_spline_manual(x, y, x_pred)
 
-    # HASIL PREDIKSI
-    st.markdown(f"""
+    # HASIL
+    st.markdown("""
     <div class="card">
-        💖 <b>Hasil Prediksi:</b><br>
-        {y_name} = <b>{y_pred:.4f}</b>
-    </div>
+        <div class="section-title">💖 Hasil Prediksi</div>
     """, unsafe_allow_html=True)
 
-    # VISUALISASI
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.subheader("📈 Visualisasi Interpolasi")
+    st.markdown(
+        f"<p style='font-size:18px; color:#c2185b;'>"
+        f"{y_name} = <b>{y_pred:.4f}</b></p>",
+        unsafe_allow_html=True
+    )
 
+    # GRAFIK
     xx = np.linspace(x.min(), x.max(), 300)
     yy = [cubic_spline_manual(x, y, xi) for xi in xx]
 
@@ -183,22 +202,23 @@ if hitung:
     ax.set_ylabel(y_name)
     ax.grid(alpha=0.3)
     ax.legend()
-    st.pyplot(fig)
 
+    st.pyplot(fig)
     st.markdown("</div>", unsafe_allow_html=True)
 
     # PENUTUP
-    st.markdown(
-        """
-        <div style="text-align:center; font-size:17px; color:#d63384; margin-top:20px;">
-            Terima kasih sudah mampir 💗<br>
-            Semoga hasil interpolasimu memuaskan 🎀
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <div style="text-align:center; color:#d63384; margin-top:20px;">
+        Terima kasih sudah mampir 💗<br>
+        Semoga hasil interpolasimu memuaskan 🎀
+    </div>
+    """, unsafe_allow_html=True)
 
 # =========================================================
 # FOOTER
 # =========================================================
-st.markdown("<p style='text-align:center; color:#c94f7c;'>Dibuat oleh Bunga, Aira, dan Uti 💗</p>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='text-align:center; color:#c94f7c;'>"
+    "Dibuat oleh Bunga, Aira, dan Uti 💗</p>",
+    unsafe_allow_html=True
+)
