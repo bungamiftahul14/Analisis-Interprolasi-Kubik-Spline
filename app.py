@@ -9,7 +9,48 @@ Original file is located at
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import CubicSpline
+
+# =========================================================
+# ALGORITMA CUBIC SPLINE MANUAL (NATURAL SPLINE)
+# =========================================================
+def cubic_spline_manual(x, y, x_pred):
+    n = len(x) - 1
+    h = np.diff(x)
+
+    A = np.zeros((n + 1, n + 1))
+    B = np.zeros(n + 1)
+
+    A[0, 0] = 1
+    A[n, n] = 1
+
+    for i in range(1, n):
+        A[i, i - 1] = h[i - 1]
+        A[i, i] = 2 * (h[i - 1] + h[i])
+        A[i, i + 1] = h[i]
+        B[i] = 3 * ((y[i + 1] - y[i]) / h[i] -
+                    (y[i] - y[i - 1]) / h[i - 1])
+
+    c = np.linalg.solve(A, B)
+
+    a = y[:-1]
+    b = np.zeros(n)
+    d = np.zeros(n)
+
+    for i in range(n):
+        b[i] = (y[i + 1] - y[i]) / h[i] - h[i] * (2 * c[i] + c[i + 1]) / 3
+        d[i] = (c[i + 1] - c[i]) / (3 * h[i])
+
+    for i in range(n):
+        if x[i] <= x_pred <= x[i + 1]:
+            dx = x_pred - x[i]
+            return a[i] + b[i]*dx + c[i]*dx**2 + d[i]*dx**3
+
+    return None
+
+
+def spline_curve(x, y, xx):
+    return [cubic_spline_manual(x, y, xi) for xi in xx]
+
 
 # =========================================================
 # KONFIGURASI HALAMAN
@@ -21,17 +62,12 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS FINAL (SIMETRIS & PADAT)
+# CSS FINAL (TETAP)
 # =========================================================
 st.markdown("""
 <style>
-body {
-    background-color: #fff7fb;
-}
-
-.block-container {
-    padding: 30px;
-}
+body { background-color: #fff7fb; }
+.block-container { padding: 30px; }
 
 .card {
     background: linear-gradient(135deg, #ffffff, #fff0f7);
@@ -41,22 +77,17 @@ body {
     margin-bottom: 22px;
 }
 
-/* JUDUL */
 h1 {
     text-align: center;
     color: #ff5fa2;
-    margin-bottom: 2px;
 }
 
-/* SUB JUDUL */
 .subtitle {
     text-align: center;
     color: #d63384;
     font-size: 18px;
-    margin-top: 0;
 }
 
-/* JUDUL SECTION */
 .section-title {
     color: #ff5fa2;
     font-weight: 700;
@@ -64,13 +95,11 @@ h1 {
     margin-bottom: 12px;
 }
 
-/* LABEL INPUT */
 label {
     color: #c2185b !important;
     font-weight: 600;
 }
 
-/* BUTTON */
 .stButton button {
     background: linear-gradient(135deg, #ff8ec7, #ff5fa2);
     color: white;
@@ -126,10 +155,8 @@ if hitung:
     idx = np.argsort(x)
     x, y = x[idx], y[idx]
 
-    spline = CubicSpline(x, y)
-    y_pred = spline(x_pred)
+    y_pred = cubic_spline_manual(x, y, x_pred)
 
-    #  HASIL PREDIKSI
     st.markdown("""
     <div class="card">
         <div class="section-title">💖 Hasil Prediksi</div>
@@ -153,17 +180,17 @@ if hitung:
     )
 
     st.markdown("</div>", unsafe_allow_html=True)
+
     st.markdown(
         "<h4 style='color:#ff5fa2; text-align:center;'>📊 Visualisasi Hasil Prediksi</h4>",
         unsafe_allow_html=True
     )
 
-    #  GRAFIK 
     xx = np.linspace(x.min(), x.max(), 300)
-    yy = spline(xx)
+    yy = spline_curve(x, y, xx)
 
     fig, ax = plt.subplots(figsize=(7,4))
-    ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Kubik Spline")
+    ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Cubic Spline")
     ax.scatter(x, y, color="#c2185b", label="Data Asli")
     ax.scatter(x_pred, y_pred, color="#007bff", s=80,
                label=f"Prediksi ({x_pred})")
@@ -175,7 +202,6 @@ if hitung:
 
     st.pyplot(fig)
 
-    # PENUTUP
     st.markdown("""
     <div style="text-align:center; color:#d63384; margin-top:20px;">
         Terima kasih sudah mampir 💗<br>
