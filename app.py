@@ -109,8 +109,8 @@ st.markdown("""
 <div class="card">
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p class="subtitle">
-        Website sederhana untuk melakukan interpolasi<br>
-        menggunakan metode <b>Natural Cubic Spline</b>
+            Haii! Selamat datang di website interpolasi 💗<br>
+            Masukkan nama variabel dan data X & Y kamu yaa ✨
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -124,14 +124,14 @@ st.subheader("💗 Masukkan Data")
 col1, col2 = st.columns(2)
 
 with col1:
-    x_name = st.text_input("Nama Variabel X", value="hari")
-    x_str = st.text_input("Data X (pisahkan dengan koma)", value="1,2,5,7")
+    x_name = st.text_input("🧷 Nama Variabel X", placeholder="contoh: Hari")
+    x_str  = st.text_input("✨ Data X (pisahkan dengan koma)", placeholder="contoh: 1, 2, 5, 7, 10")
 
 with col2:
-    y_name = st.text_input("Nama Variabel Y", value="tinggi")
-    y_str = st.text_input("Data Y (pisahkan dengan koma)", value="10,16,17,18")
+    y_name = st.text_input("🧷 Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
+    y_str  = st.text_input("✨ Data Y (pisahkan dengan koma)", placeholder="contoh: 3, 6, 8, 11, 15")
 
-x_pred = st.number_input("Nilai X yang ingin diprediksi", value=3.0)
+x_pred = st.number_input("🔍 Nilai X yang ingin diprediksi", value=None, placeholder="Masukkan angka")
 hitung = st.button("💖 Hitung Interpolasi")
 st.markdown("</div>", unsafe_allow_html=True)
 
