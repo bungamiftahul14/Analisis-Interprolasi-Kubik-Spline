@@ -11,23 +11,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =========================================================
-# FUNGSI NATURAL CUBIC SPLINE (MANUAL)
+# FUNGSI NATURAL CUBIC SPLINE
 # =========================================================
 def cubic_spline_manual(x, y, x_pred):
     n = len(x) - 1
     h = np.diff(x)
 
-    A = np.zeros((n + 1, n + 1))
-    B = np.zeros(n + 1)
+    A = np.zeros((n+1, n+1))
+    B = np.zeros(n+1)
 
-    A[0, 0] = 1
-    A[n, n] = 1
+    A[0,0] = 1
+    A[n,n] = 1
 
     for i in range(1, n):
-        A[i, i-1] = h[i-1]
-        A[i, i] = 2 * (h[i-1] + h[i])
-        A[i, i+1] = h[i]
-        B[i] = 3 * ((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
+        A[i,i-1] = h[i-1]
+        A[i,i]   = 2*(h[i-1]+h[i])
+        A[i,i+1] = h[i]
+        B[i] = 3*((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
 
     c = np.linalg.solve(A, B)
 
@@ -36,16 +36,13 @@ def cubic_spline_manual(x, y, x_pred):
     d = np.zeros(n)
 
     for i in range(n):
-        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i] + c[i+1]) / 3
-        d[i] = (c[i+1]-c[i]) / (3*h[i])
+        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
+        d[i] = (c[i+1]-c[i])/(3*h[i])
 
     for i in range(n):
         if x[i] <= x_pred <= x[i+1]:
             dx = x_pred - x[i]
             return a[i] + b[i]*dx + c[i]*dx**2 + d[i]*dx**3
-
-    return None
-
 
 # =========================================================
 # KONFIGURASI HALAMAN
@@ -57,7 +54,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS FINAL (BERSIH & RAPI)
+# CSS FINAL (NO SPACER, NO EMPTY CARD)
 # =========================================================
 st.markdown("""
 <style>
@@ -66,35 +63,35 @@ body {
 }
 
 .block-container {
-    padding: 35px;
+    padding: 32px;
 }
 
 .card {
     background: linear-gradient(135deg, #ffffff, #fff0f7);
-    padding: 25px;
+    padding: 24px;
     border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(255,105,180,0.15);
-    margin-bottom: 25px;
+    box-shadow: 0 8px 18px rgba(255,105,180,0.15);
+    margin-bottom: 22px;
 }
 
 h1 {
-    color: #ff5fa2;
     text-align: center;
+    color: #ff5fa2;
     margin-bottom: 6px;
 }
 
 .subtitle {
     text-align: center;
     color: #c94f7c;
+    margin-top: 0;
     font-size: 16px;
-    margin-top: 0px;
 }
 
 .section-title {
     color: #ff5fa2;
-    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 15px;
+    font-size: 20px;
+    margin-bottom: 14px;
 }
 
 label {
@@ -105,18 +102,14 @@ label {
 .stButton button {
     background: linear-gradient(135deg, #ff8ec7, #ff5fa2);
     color: white;
-    border-radius: 10px;
     font-weight: bold;
-}
-
-.stButton button:hover {
-    background: linear-gradient(135deg, #ff5fa2, #ff8ec7);
+    border-radius: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# HEADER
+# HEADER (1 CARD – TIDAK ADA SPACER)
 # =========================================================
 st.markdown("""
 <div class="card">
@@ -129,55 +122,41 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================================================
-# INPUT DATA
+# INPUT DATA (LANGSUNG, TANPA JARAK KOSONG)
 # =========================================================
-st.markdown("<div class='card'>", unsafe_allow_html=True)
-st.markdown("<div class='section-title'>💗 Masukkan Data</div>", unsafe_allow_html=True)
+st.markdown("""
+<div class="card">
+    <div class="section-title">💗 Masukkan Data</div>
+""", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 
 with col1:
-    x_name = st.text_input("🧷 Nama Variabel X", placeholder="contoh: Hari")
-    x_str  = st.text_input("✨ Data X (pisahkan dengan koma)", placeholder="contoh: 1, 2, 5, 7, 10")
+    x_name = st.text_input("Nama Variabel X", placeholder="contoh: Hari")
+    x_str  = st.text_input("Data X (pisahkan dengan koma)", placeholder="1, 2, 5, 7, 10")
 
 with col2:
-    y_name = st.text_input("🧷 Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
-    y_str  = st.text_input("✨ Data Y (pisahkan dengan koma)", placeholder="contoh: 3, 6, 8, 11, 15")
+    y_name = st.text_input("Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
+    y_str  = st.text_input("Data Y (pisahkan dengan koma)", placeholder="3, 6, 8, 11, 15")
 
-x_pred = st.number_input(
-    "🔍 Nilai X yang ingin diprediksi",
-    placeholder="Masukkan angka",
-    value=None
-)
+x_pred = st.number_input("Nilai X yang ingin diprediksi", placeholder="Masukkan angka", value=None)
 
 hitung = st.button("💖 Hitung Interpolasi")
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
-# HASIL & VISUALISASI
+# HASIL
 # =========================================================
 if hitung:
-    try:
-        x = np.array([float(i) for i in x_str.split(",")])
-        y = np.array([float(i) for i in y_str.split(",")])
-    except:
-        st.error("Data harus berupa angka dan dipisahkan dengan koma")
-        st.stop()
-
-    if len(x) < 3 or len(x) != len(y):
-        st.error("Minimal 3 titik dan jumlah data X dan Y harus sama")
-        st.stop()
+    x = np.array([float(i) for i in x_str.split(",")])
+    y = np.array([float(i) for i in y_str.split(",")])
 
     idx = np.argsort(x)
     x, y = x[idx], y[idx]
 
-    if not (x.min() <= x_pred <= x.max()):
-        st.error("Nilai prediksi harus berada dalam rentang data")
-        st.stop()
-
     y_pred = cubic_spline_manual(x, y, x_pred)
 
-    # HASIL
     st.markdown("""
     <div class="card">
         <div class="section-title">💖 Hasil Prediksi</div>
@@ -189,17 +168,13 @@ if hitung:
         unsafe_allow_html=True
     )
 
-    # GRAFIK
     xx = np.linspace(x.min(), x.max(), 300)
     yy = [cubic_spline_manual(x, y, xi) for xi in xx]
 
     fig, ax = plt.subplots(figsize=(7,4))
-    ax.plot(xx, yy, color="#ff5fa2", linewidth=2, label="Kurva Kubik Spline")
-    ax.scatter(x, y, color="#c2185b", label="Data Asli")
-    ax.scatter(x_pred, y_pred, color="#007bff", s=80, label="Prediksi")
-
-    ax.set_xlabel(x_name)
-    ax.set_ylabel(y_name)
+    ax.plot(xx, yy, label="Kubik Spline")
+    ax.scatter(x, y)
+    ax.scatter(x_pred, y_pred)
     ax.grid(alpha=0.3)
     ax.legend()
 
