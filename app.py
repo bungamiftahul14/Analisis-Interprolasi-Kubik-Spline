@@ -47,7 +47,6 @@ def cubic_spline_manual(x, y, x_pred):
 
     return None
 
-
 # =========================================================
 # KONFIGURASI HALAMAN
 # =========================================================
@@ -58,35 +57,38 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS CUSTOM
+# CSS CUSTOM (ESTETIK + AKADEMIK)
 # =========================================================
 st.markdown("""
 <style>
 body {
     background-color: #fff0f6;
 }
-.main {
-    background-color: #fff0f6;
+.block-container {
+    padding: 30px;
 }
 .card {
     background: white;
     padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0px 8px 25px rgba(255, 105, 180, 0.25);
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px rgba(255,105,180,0.25);
     margin-bottom: 25px;
 }
-h1, h2, h3 {
+h1 {
     color: #ff5fa2;
+}
+h2, h3 {
+    color: #d63384;
 }
 .stButton>button {
     background: linear-gradient(90deg, #ff85c0, #ff5fa2);
     color: white;
-    border-radius: 12px;
+    border-radius: 14px;
     font-weight: bold;
-    padding: 10px 25px;
+    padding: 10px 28px;
 }
 .stButton>button:hover {
-    transform: scale(1.03);
+    transform: scale(1.04);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -107,22 +109,48 @@ st.markdown(
     unsafe_allow_html=True
 )
 # =========================================================
-# ACCORDION ALGORITMA
+# PENJELASAN ALGORITMA (INTERAKTIF)
 # =========================================================
-with st.expander("📘 Lihat Algoritma Kubik Spline"):
+with st.expander("📘 Lihat Algoritma Cubic Spline (Klik untuk membuka)"):
     st.markdown("""
-**Langkah-langkah Algoritma Kubik Spline (Natural):**
+### 📌 Algoritma Interpolasi Kubik Spline (Natural)
 
-1. Bentuk persamaan spline kubik pada setiap selang  
-2. Hitung jarak antar titik  
-3. Syarat interpolasi (melewati titik data)  
-4. Kekontinuan turunan pertama dan kedua  
-5. Syarat natural spline: turunan kedua di ujung = 0  
-6. Bentuk sistem persamaan linear koefisien \(c_i\)  
-7. Hitung koefisien \(a_i, b_i, c_i, d_i\)  
-8. Evaluasi spline pada nilai \(x\) tertentu  
+**1. Persamaan Umum Cubic Spline**  
+\[
+f_i(x) = a_i + b_i(x-x_i) + c_i(x-x_i)^2 + d_i(x-x_i)^3
+\]
 
-Algoritma ini sepenuhnya **manual** dan sesuai literatur numerik.
+**2. Menghitung Jarak Antar Titik**  
+\[
+h_i = x_{i+1} - x_i
+\]
+
+**3. Syarat Interpolasi**  
+Spline harus melalui seluruh titik data:
+\[
+f_i(x_i)=y_i,\quad f_i(x_{i+1})=y_{i+1}
+\]
+
+**4. Kekontinuan Turunan**  
+Turunan pertama dan kedua kontinu pada setiap titik.
+
+**5. Natural Spline**  
+\[
+f''(x_0)=0,\quad f''(x_n)=0
+\]
+
+**6. Sistem Persamaan Linear**  
+Digunakan untuk menentukan koefisien \(c_i\).
+
+**7. Perhitungan Koefisien**  
+\[
+a_i,\; b_i,\; c_i,\; d_i
+\]
+
+**8. Evaluasi Spline**  
+Nilai spline dihitung pada \(x\) tertentu di selang terkait.
+
+✔️ Algoritma ini **sepenuhnya manual** dan sesuai literatur numerik.
 """)
 
 # =========================================================
