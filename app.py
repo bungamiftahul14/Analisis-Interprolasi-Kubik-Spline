@@ -157,29 +157,22 @@ if hitung:
 
     y_pred = cubic_spline_manual(x, y, x_pred)
 
-    st.markdown("""
-    <div class="card">
+     st.markdown(f"""
+    <div class="card" style="text-align:center;">
         <div class="section-title">💖 Hasil Prediksi</div>
-    """, unsafe_allow_html=True)
-
-    st.markdown(
-        f"""
         <div style="
             background:#ffffff;
-            padding:14px;
-            border-radius:12px;
-            font-size:25px;
+            padding:16px;
+            border-radius:14px;
+            font-size:20px;
             color:#c2185b;
             font-weight:600;
-            text-align:center;
+            margin-top:10px;
         ">
-        {y_name} = {y_pred:.4f}
+            {y_name} = {y_pred:.4f}
         </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown(
         "<h4 style='color:#ff5fa2; text-align:center;'>📊 Visualisasi Hasil Prediksi</h4>",
