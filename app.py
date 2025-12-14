@@ -128,7 +128,7 @@ st.markdown(
 st.subheader("💗 Masukkan Data Anda")
 
 # Variabel X 
-x_name = st.text_input("🧷 Nama Variabel X"", placeholder="contoh: Hari")
+x_name = st.text_input("🧷 Nama Variabel X", placeholder="contoh: Hari")
 x_str = st.text_input("✨ Data X (pisahkan dengan koma)", placeholder="1, 2, 4, 7")
 
 # Variabel Y
