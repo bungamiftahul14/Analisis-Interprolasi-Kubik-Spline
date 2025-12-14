@@ -11,42 +11,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =========================================================
-# FUNGSI CUBIC SPLINE MANUAL (NATURAL SPLINE)
+# FUNGSI KUBIK SPLINE MANUAL (NATURAL)
 # =========================================================
-def cubic_spline_manual(x, y, x_pred):
-    n = len(x) - 1
-    h = np.diff(x)
+def kubik_spline_manual(x, y, x_pred):
+n = len(x) - 1
+h = np.diff(x)
 
-    # Sistem persamaan untuk koefisien c
-    A = np.zeros((n + 1, n + 1))
-    B = np.zeros(n + 1)
+A = np.zeros((n + 1, n + 1))
+B = np.zeros(n + 1)
 
-    A[0, 0] = 1
-    A[n, n] = 1
+A[0, 0] = 1
+A[n, n] = 1
 
-    for i in range(1, n):
-        A[i, i-1] = h[i-1]
-        A[i, i]   = 2 * (h[i-1] + h[i])
-        A[i, i+1] = h[i]
-        B[i] = 3 * ((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
+for i in range(1, n):
+A[i, i-1] = h[i-1]
+A[i, i] = 2 * (h[i-1] + h[i])
+A[i, i+1] = h[i]
+B[i] = 3 * ((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
 
-    c = np.linalg.solve(A, B)
+c = np.linalg.solve(A, B)
 
-    a = y[:-1]
-    b = np.zeros(n)
-    d = np.zeros(n)
+a = y[:-1]
+b = np.zeros(n)
+d = np.zeros(n)
 
-    for i in range(n):
-        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
-        d[i] = (c[i+1]-c[i])/(3*h[i])
+for i in range(n):
+b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
+d[i] = (c[i+1]-c[i])/(3*h[i])
 
-    for i in range(n):
-        if x[i] <= x_pred <= x[i+1]:
-            dx = x_pred - x[i]
-            return a[i] + b[i]*dx + c[i]*dx**2 + d[i]*dx**3
+for i in range(n):
+if x[i] <= x_pred <= x[i+1]:
+dx = x_pred - x[i]
+return a[i] + b[i]*dx + c[i]*dx**2 + d[i]*dx**3
 
-    return None
-
+return None
 # =========================================================
 # KONFIGURASI HALAMAN
 # =========================================================
@@ -61,26 +59,15 @@ st.set_page_config(
 # =========================================================
 st.markdown("""
 <style>
-body { background-color:#fff0f6; }
-.block-container {
-    background:#fff0f6;
-    padding:25px;
-}
+.block-container { padding:30px; }
 .card {
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(255,105,180,.25);
-    margin-bottom:25px;
+background:white;
+padding:25px;
+border-radius:16px;
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+margin-bottom:25px;
 }
-h1, h2, h3 { color:#ff5fa2; }
-.stButton>button {
-    background:linear-gradient(90deg,#ff85c0,#ff5fa2);
-    color:white;
-    border-radius:14px;
-    font-weight:bold;
-    padding:10px 30px;
-}
+h1, h2 { color:#d63384; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -91,12 +78,12 @@ st.markdown("""
 <div class="card" style="text-align:center;">
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p>
-    Website interpolasi Kubic Spline 💗<br>
-    </p>
+    Website sederhana metode Interpolasi Kubik Spline 💗 </p>
 </div>
 """, unsafe_allow_html=True)
+
 # =========================================================
-# TABS UTAMA (INI KUNCINYA)
+# TABS 
 # =========================================================
 tab1, tab2, tab3 = st.tabs([
     "📘 Algoritma",
@@ -110,59 +97,35 @@ tab1, tab2, tab3 = st.tabs([
 with tab1:
     st.markdown("""
 <div class="card">
-
-### 📌 Algoritma Cubic Spline (Natural)
-
-**1. Persamaan Umum Cubic Spline**  
-\[
-f_i(x)=a_i+b_i(x-x_i)+c_i(x-x_i)^2+d_i(x-x_i)^3
-\]
-
-**2. Menghitung Jarak Antar Titik**  
-\[
-h_i = x_{i+1}-x_i
-\]
-
-**3. Syarat Interpolasi**  
-Spline harus melalui semua titik data.
-
-**4. Kekontinuan Turunan**  
-Turunan pertama dan kedua kontinu.
-
-**5. Natural Spline**  
-\[
-f''(x_0)=0,\quad f''(x_n)=0
-\]
-
-**6. Sistem Persamaan Linear**  
-Untuk menentukan koefisien \(c_i\).
-
-**7. Menghitung Koefisien**  
-\[
-a_i,\; b_i,\; c_i,\; d_i
-\]
-
-**8. Evaluasi Spline**  
-Menghitung nilai spline pada \(x\) tertentu.
-
-✔️ Metode **manual**, **tanpa SciPy**, dan **sesuai literatur numerik**.
-
+Langkah 1  : Menuliskan persamaan umum cubic spline
+Langkah 2  : Menghitung jarak antar titik (h_i)
+Langkah 3  : Syarat interpolasi (spline melewati titik data)
+Langkah 4  : Kekontinuan turunan pertama dan kedua
+Langkah 5  : Syarat natural spline (turunan kedua di ujung = 0)
+Langkah 6  : Membentuk sistem persamaan linear koefisien c_i
+Langkah 7  : Menghitung koefisien a_i, b_i, c_i, d_i
+Langkah 8  : Evaluasi spline pada titik x tertentu
 </div>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# INPUT DATA
+# TAB 2 — INPUT DATA (SEDERHANA)
 # =========================================================
+with tab2:
 st.markdown("<div class='card'>", unsafe_allow_html=True)
-st.subheader("💗 Masukkan Data Anda")
 
+# Variabel X
 x_name = st.text_input("Nama Variabel X", placeholder="contoh: Hari")
-x_str  = st.text_input("Data X (pisahkan koma)", placeholder="1, 2, 4, 7")
+x_str = st.text_input("Data X (pisahkan dengan koma)", placeholder="contoh: 1, 2, 5, 7, 10")
 
+# Variabel Y
 y_name = st.text_input("Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
-y_str  = st.text_input("Data Y (pisahkan koma)", placeholder="10, 15, 14, 20")
+y_str = st.text_input("Data Y (pisahkan dengan koma)", placeholder="contoh: 3, 6, 8, 11, 15")
 
+# Prediksi
 x_pred = st.number_input("Nilai X yang ingin diprediksi")
+
+hitung = st.button("Hitung Interpolasi")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -172,30 +135,28 @@ st.markdown("</div>", unsafe_allow_html=True)
 with tab3:
     if 'hitung' in locals() and hitung:
         try:
-            x = np.array([float(i) for i in x_str.split(",")])
-            y = np.array([float(i) for i in y_str.split(",")])
+            x = np.array([float(i) for i in x_str.split(',')])
+            y = np.array([float(i) for i in y_str.split(',')])
         except:
-            st.error("❌ Data harus berupa angka")
+            st.error("Data X dan Y harus berupa angka")
             st.stop()
-
         if len(x) != len(y) or len(x) < 3:
-            st.error("❌ Minimal 3 titik dan jumlah X = Y")
+            st.error("Minimal 3 titik dan jumlah X harus sama dengan Y")
             st.stop()
-
         idx = np.argsort(x)
         x, y = x[idx], y[idx]
-
+       
         if not (x.min() <= x_pred <= x.max()):
-            st.error("❌ X prediksi harus dalam rentang data")
+            st.error("Nilai X prediksi harus berada dalam rentang data")
             st.stop()
-
-        y_pred = cubic_spline_manual(x, y, x_pred)
-
+        
+        y_pred = kubik_spline_manual(x, y, x_pred)
+        
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.success(f"💗 Hasil Prediksi: **{y_name} = {y_pred:.4f}**")
-
+        st.success(f"Hasil interpolasi: {y_name} = {y_pred:.4f}")
+        
         xx = np.linspace(x.min(), x.max(), 300)
-        yy = [cubic_spline_manual(x, y, xi) for xi in xx]
+        yy = [kubik_spline_manual(x, y, xi) for xi in xx]
 
         fig, ax = plt.subplots(figsize=(7, 4))
         ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Cubic Spline")
@@ -220,7 +181,6 @@ with tab3:
             """,
             unsafe_allow_html=True
         )
-
 
 # =========================================================
 # FOOTER
