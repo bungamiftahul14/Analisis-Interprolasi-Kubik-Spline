@@ -117,7 +117,7 @@ st.markdown("""
     <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
     <p class="subtitle">
         Haii! Selamat datang di website interpolasi Kubik Spline💗<br>
-        Masukkan nama variabel dan data X & Y kamu yaa ✨
+        Semoga kami bisa membantu kamu ya ✨
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -127,7 +127,7 @@ st.markdown("""
 # =========================================================
 st.markdown("""
 <div class="card">
-    <div class="section-title">💗 Masukkan Data</div>
+    <div class="section-title">💗 Masukkan Data Anda</div>
 """, unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
