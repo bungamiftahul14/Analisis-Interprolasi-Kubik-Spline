@@ -11,48 +11,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =========================================================
-# ALGORITMA CUBIC SPLINE MANUAL (NATURAL SPLINE)
+# FUNGSI CUBIC SPLINE MANUAL (NATURAL SPLINE)
 # =========================================================
-# Langkah 1  : Persamaan umum cubic spline
-# Langkah 2  : Menghitung jarak antar titik (h_i)
-# Langkah 3  : Syarat interpolasi (a_i = y_i)
-# Langkah 4  : Kekontinuan turunan pertama & kedua
-# Langkah 5  : Natural spline (c_0 = c_n = 0)
-# Langkah 6  : Sistem persamaan koefisien c_i
-# Langkah 7  : Hitung koefisien a_i, b_i, c_i, d_i
-# Langkah 8  : Evaluasi spline
-# =========================================================
-
 def cubic_spline_manual(x, y, x_pred):
     n = len(x) - 1
     h = np.diff(x)
 
-    # Sistem persamaan untuk c_i
-    A = np.zeros((n+1, n+1))
-    B = np.zeros(n+1)
+    # Sistem persamaan untuk koefisien c
+    A = np.zeros((n + 1, n + 1))
+    B = np.zeros(n + 1)
 
     A[0, 0] = 1
     A[n, n] = 1
 
     for i in range(1, n):
         A[i, i-1] = h[i-1]
-        A[i, i] = 2 * (h[i-1] + h[i])
+        A[i, i]   = 2 * (h[i-1] + h[i])
         A[i, i+1] = h[i]
-        B[i] = 3 * ((y[i+1] - y[i]) / h[i] -
-                    (y[i] - y[i-1]) / h[i-1])
+        B[i] = 3 * ((y[i+1]-y[i])/h[i] - (y[i]-y[i-1])/h[i-1])
 
     c = np.linalg.solve(A, B)
 
-    # Koefisien spline
     a = y[:-1]
     b = np.zeros(n)
     d = np.zeros(n)
 
     for i in range(n):
-        b[i] = (y[i+1] - y[i]) / h[i] - h[i] * (2*c[i] + c[i+1]) / 3
-        d[i] = (c[i+1] - c[i]) / (3*h[i])
+        b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
+        d[i] = (c[i+1]-c[i])/(3*h[i])
 
-    # Evaluasi spline
     for i in range(n):
         if x[i] <= x_pred <= x[i+1]:
             dx = x_pred - x[i]
@@ -71,46 +58,35 @@ st.set_page_config(
 )
 
 # =========================================================
-# CSS CUSTOM (TRENDY & CUTE)
+# CSS CUSTOM
 # =========================================================
 st.markdown("""
 <style>
-.block-container {
+body {
     background-color: #fff0f6;
-    padding: 30px;
-    border-radius: 18px;
+}
+.main {
+    background-color: #fff0f6;
 }
 .card {
     background: white;
-    padding: 22px;
+    padding: 25px;
     border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(255,105,180,0.25);
-    margin-bottom: 22px;
+    box-shadow: 0px 8px 25px rgba(255, 105, 180, 0.25);
+    margin-bottom: 25px;
 }
-.result-box {
-    background: linear-gradient(135deg, #ff8ec7, #ffc1dd);
-    padding: 20px;
-    border-radius: 16px;
-    color: #6a003a;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
+h1, h2, h3 {
+    color: #ff5fa2;
 }
-h1 { color: #ff69b4 !important; }
-label { color: #c2185b !important; font-weight: bold; }
-div.stButton > button {
-    background-color: #ff8ec7;
+.stButton>button {
+    background: linear-gradient(90deg, #ff85c0, #ff5fa2);
     color: white;
     border-radius: 12px;
-    padding: 10px 20px;
     font-weight: bold;
+    padding: 10px 25px;
 }
-div.stButton > button:hover { background-color: #ff5fad; }
-hr {
-    border: none;
-    height: 2px;
-    background: linear-gradient(to right, #ff5fad, #ffc1dd);
-    margin: 25px 0;
+.stButton>button:hover {
+    transform: scale(1.03);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -118,56 +94,57 @@ hr {
 # =========================================================
 # HEADER
 # =========================================================
-st.markdown("""
-<div style="text-align:center;">
-    <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
-    <p style="font-size:18px; color:#c2185b;">
-        Website interpolasi Cubic Spline dengan algoritma manual 💗<br>
-        Tanpa SciPy · Sesuai teori · Siap akademik
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
+st.markdown(
+    """
+    <div style="text-align:center;">
+        <h1>🌸 Interpolasi Kubik Spline 🌸</h1>
+        <p style="font-size:18px; color:#c2185b;">
+            Haii! Selamat datang di website interpolasi 💗<br>
+            Masukkan nama variabel dan data X & Y kamu yaa ✨
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 # =========================================================
-# EDUKASI (OPSIONAL)
+# ACCORDION ALGORITMA
 # =========================================================
-with st.expander("📚 Lihat Algoritma Cubic Spline"):
+with st.expander("📘 Lihat Algoritma Kubik Spline"):
     st.markdown("""
-    **Langkah-langkah Cubic Spline Natural:**
-    1. Menentukan persamaan spline kubik  
-    2. Menghitung jarak antar titik  
-    3. Menetapkan syarat interpolasi  
-    4. Menjaga kekontinuan turunan  
-    5. Syarat natural spline  
-    6. Sistem persamaan koefisien  
-    7. Menghitung koefisien spline  
-    8. Evaluasi nilai spline
-    """)
+**Langkah-langkah Algoritma Kubik Spline (Natural):**
+
+1. Bentuk persamaan spline kubik pada setiap selang  
+2. Hitung jarak antar titik  
+3. Syarat interpolasi (melewati titik data)  
+4. Kekontinuan turunan pertama dan kedua  
+5. Syarat natural spline: turunan kedua di ujung = 0  
+6. Bentuk sistem persamaan linear koefisien \(c_i\)  
+7. Hitung koefisien \(a_i, b_i, c_i, d_i\)  
+8. Evaluasi spline pada nilai \(x\) tertentu  
+
+Algoritma ini sepenuhnya **manual** dan sesuai literatur numerik.
+""")
 
 # =========================================================
-# INPUT DATA (CARD)
+# INPUT DATA
 # =========================================================
 st.markdown("<div class='card'>", unsafe_allow_html=True)
 st.subheader("💗 Masukkan Data Anda")
 
-x_name = st.text_input("🧷 Nama Variabel X", placeholder="contoh: Hari")
-x_str  = st.text_input("✨ Data X (pisahkan dengan koma)", placeholder="1, 2, 4, 7")
+x_name = st.text_input("Nama Variabel X", placeholder="contoh: Hari")
+x_str  = st.text_input("Data X (pisahkan koma)", placeholder="1, 2, 4, 7")
 
-y_name = st.text_input("🧷 Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
-y_str  = st.text_input("✨ Data Y (pisahkan dengan koma)", placeholder="10, 15, 14, 20")
+y_name = st.text_input("Nama Variabel Y", placeholder="contoh: Tinggi Jagung (cm)")
+y_str  = st.text_input("Data Y (pisahkan koma)", placeholder="10, 15, 14, 20")
 
-x_pred = st.number_input("🔍 Nilai X yang ingin diprediksi", placeholder="Masukkan angka")
+x_pred = st.number_input("Nilai X yang ingin diprediksi")
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # PROSES
 # =========================================================
 if st.button("💖 Hitung Interpolasi"):
-
-    if not all([x_name, y_name, x_str, y_str]) or x_pred is None:
-        st.error("❌ Semua input wajib diisi")
-        st.stop()
-
     try:
         x = np.array([float(i) for i in x_str.split(",")])
         y = np.array([float(i) for i in y_str.split(",")])
@@ -183,52 +160,51 @@ if st.button("💖 Hitung Interpolasi"):
     x, y = x[idx], y[idx]
 
     if not (x.min() <= x_pred <= x.max()):
-        st.error("❌ Nilai X prediksi harus dalam rentang data")
+        st.error("❌ Nilai X prediksi harus berada dalam rentang data")
         st.stop()
 
     y_pred = cubic_spline_manual(x, y, x_pred)
 
-    # HASIL
-    st.markdown(f"""
-    <div class="result-box">
-        🌸 Hasil Interpolasi 🌸 <br>
-        {y_name} = <b>{y_pred:.4f}</b>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.success(f"💗 Hasil Prediksi: **{y_name} = {y_pred:.4f}**")
 
-    st.markdown("<hr>", unsafe_allow_html=True)
-    st.subheader("📈 Visualisasi Kurva Cubic Spline")
-
-    # PLOT
     xx = np.linspace(x.min(), x.max(), 300)
     yy = [cubic_spline_manual(x, y, xi) for xi in xx]
 
-    fig, ax = plt.subplots(figsize=(7,4))
-    ax.set_facecolor("#fff5fb")
-    fig.patch.set_facecolor("#fff0f6")
+    # VISUALISASI
+    xx = np.linspace(x.min(), x.max(), 300)
+    yy = [cubic_spline_manual(x, y, xi) for xi in xx]
 
+    fig, ax = plt.subplots(figsize=(7, 4))
     ax.plot(xx, yy, linewidth=2, color="#ff5fa2", label="Kurva Cubic Spline")
     ax.scatter(x, y, color="#c2185b", label="Data Asli")
-    ax.scatter(x_pred, y_pred, color="#007bff", s=80, label="Prediksi")
+    ax.scatter(x_pred, y_pred, color="#007bff", s=80,
+               label=f"Prediksi ({x_pred})")
 
-    ax.set_xlabel(x_name)
-    ax.set_ylabel(y_name)
+    ax.set_xlabel(x_name, fontsize=11, color="#c2185b")
+    ax.set_ylabel(y_name, fontsize=11, color="#c2185b")
+
     ax.grid(True, alpha=0.3)
     ax.legend()
     st.pyplot(fig)
-
+    
     # PENUTUP
-    st.markdown("""
-    <div style="text-align:center; font-size:17px; color:#d63384; margin-top:20px;">
-        Terima kasih sudah mampir 💗<br>
-        Semoga hasil interpolasimu memuaskan 🎀
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="text-align:center; font-size:17px; color:#d63384; margin-top:20px;">
+            Terima kasih sudah mampir 💗<br>
+            Semoga hasil interpolasimu memuaskan 🎀
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 # =========================================================
 # FOOTER
 # =========================================================
-st.markdown(
-    "<p style='text-align:center; color:#c94f7c;'>Dibuat oleh Bunga, Aira, dan Uti 💗</p>",
-    unsafe_allow_html=True
-)
+st.markdown("""
+<p style="text-align:center; color:#c94f7c;">
+Dibuat oleh <b>Bunga, Aira, dan Uti</b> 💗
+</p>
+""", unsafe_allow_html=True)
